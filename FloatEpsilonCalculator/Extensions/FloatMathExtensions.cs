@@ -4,6 +4,7 @@ namespace FloatEpsilonCalculator.Extensions
 {
     public static class FloatMathExtensions
     {
+        public const int FLOAT_EQUALITY_PRECISION = 12;
         public const int FLOAT_FRACTION_SIZE = 23;
 
         public static string FloatToBinary(this float value)
@@ -66,6 +67,36 @@ namespace FloatEpsilonCalculator.Extensions
 
                 return *(float*)&eps;
             }
+        }
+
+        public static bool Equal(this float first, float second, int precision = FLOAT_EQUALITY_PRECISION)
+        {
+            return Math.Abs(first - second) <= Math.Max(Math.Abs(first), Math.Abs(second)).GetFloatRelativeEpsilon(precision);
+        }
+
+        public static bool AbsEqual(this float first, float second, float eps)
+        {
+            return Math.Abs(first - second) <= eps;
+        }
+
+        public static bool NotSmaller(this float first, float second, int precision = FLOAT_EQUALITY_PRECISION)
+        {
+            return first > second || Equal(first, second, precision);
+        }
+
+        public static bool NotGreater(this float first, float second, int precision = FLOAT_EQUALITY_PRECISION)
+        {
+            return first < second || Equal(first, second, precision);
+        }
+
+        public static bool Smaller(this float first, float second, int precision = FLOAT_EQUALITY_PRECISION)
+        {
+            return first < second && !Equal(first, second, precision);
+        }
+
+        public static bool Greater(this float first, float second, int precision = FLOAT_EQUALITY_PRECISION)
+        {
+            return first > second && !Equal(first, second, precision);
         }
 
         public static float FastInvSqrt(float number)

@@ -4,6 +4,7 @@ namespace FloatEpsilonCalculator.Extensions
 {
     public static class DoubleMathExtensions
     {
+        public const int DOUBLE_EQUALITY_PRECISION = 40;
         public const int DOUBLE_FRACTION_SIZE = 52;
 
         public static string DoubleToBinary(this double d)
@@ -63,6 +64,36 @@ namespace FloatEpsilonCalculator.Extensions
                 }
                 return *(double*)&eps;
             }
+        }
+
+        public static bool Equal(this double first, double second, int precision = DOUBLE_EQUALITY_PRECISION)
+        {
+            return Math.Abs(first - second) <= Math.Max(Math.Abs(first), Math.Abs(second)).GetDoubleRelativeEpsilon(precision);
+        }
+
+        public static bool AbsEqual(this double first, double second, double eps)
+        {
+            return Math.Abs(first - second) <= eps;
+        }
+
+        public static bool NotSmaller(this double first, double second, int precision = DOUBLE_EQUALITY_PRECISION)
+        {
+            return first > second || Equal(first, second, precision);
+        }
+
+        public static bool NotGreater(this double first, double second, int precision = DOUBLE_EQUALITY_PRECISION)
+        {
+            return first < second || Equal(first, second, precision);
+        }
+
+        public static bool Smaller(this double first, double second, int precision = DOUBLE_EQUALITY_PRECISION)
+        {
+            return first < second && !Equal(first, second, precision);
+        }
+
+        public static bool Greater(this double first, double second, int precision = DOUBLE_EQUALITY_PRECISION)
+        {
+            return first > second && !Equal(first, second, precision);
         }
     }
 }
